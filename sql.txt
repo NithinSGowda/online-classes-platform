@@ -1,0 +1,33 @@
+CREATE TABLE username (
+  id int NOT NULL,
+  username varchar(50) NOT NULL,
+  fname varchar(30),
+  lname varchar(30),
+  password varchar(30),
+  sem int,
+  PRIMARY KEY (username),
+);
+
+CREATE TABLE posts (
+  post_id int NOT NULL AUTO_INCREMENT,
+  author varchar(50) NOT NULL,
+  views int,
+  likes int,
+  link varchar(200),
+  title text,
+  description text,
+  PRIMARY KEY (post_id),
+  FOREIGN KEY (author) REFERENCES users(username)
+);
+
+
+CREATE TABLE comments (
+  comment_id int NOT NULL,
+  author varchar(50) NOT NULL,
+  likes int,
+  post_id int NOT NULL,
+  PRIMARY KEY (comment_id),
+  FOREIGN KEY (author) REFERENCES users(username),
+  FOREIGN KEY (post_id) REFERENCES posts(post_id)
+);
+

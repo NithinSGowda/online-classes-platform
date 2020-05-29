@@ -1,0 +1,6 @@
+CREATE TABLE username (
+  followers varchar(50) NOT NULL,
+  PRIMARY KEY (followers),
+  FOREIGN KEY (followers) REFERENCES users(username)
+);
+
