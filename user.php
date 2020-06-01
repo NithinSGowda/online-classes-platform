@@ -3,8 +3,8 @@
 	ini_set('display_errors', 1);
 	error_reporting(-1);
 	$host = '127.0.0.1';
-	$dbuser = 'online_class'; 
-	$dbpass = '11111111';
+	$dbuser = 'secret'; 
+	$dbpass = 'secret';
 	$dbname = 'online_class';
 	$conn = new mysqli($host, $dbuser, $dbpass, $dbname);
 	if (!$conn) {
@@ -94,7 +94,15 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<div class="main-grids">
 				<div class="top-grids">
 					<div class="recommended-info">
-						<h1><?php echo $_GET["user"]."'s profile"; ?></h1>
+						<h1><?php 
+						echo $_GET["user"]."'s profile <h3>"; 
+						if(isset($_COOKIE["user"])){
+							$auth = $_COOKIE["user"];
+							echo "<a href=\"follow.php?follower=".$auth."&following=".$_GET["user"]."\"><button style=\"color:white; background-color:#3167BE; padding: 5px 15px;\">Follow + </button></a>";
+						 }else{
+							 echo "Login to follow this user";
+						 }
+						?></h3></h1>
 					</div>
                     <?php
 					$query = "SELECT * from users WHERE username ='".$_GET["user"]."'";
@@ -102,9 +110,13 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					$row = $result->fetch_assoc();
 					echo "<h3>First name : ".$row["fname"]."</br>";
 					echo "Last name : ".$row["lname"]."</br>";
+					echo "Reputation : ".$row["reputation"]."</br>";
 					echo "Semester : ".$row["sem"]."</br></h3></br></br>";
 					?>
-
+					<?php 
+					
+					?>
+					
 
 
 					<div class="clearfix"> </div>

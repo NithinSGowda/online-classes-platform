@@ -85,19 +85,72 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 			<div class="main-grids">
-				<div class="top-grids">
+				<div class="top-grids"> <!--Q&A-->
 					<div class="recommended-info">
-						<h3>Recent Videos</h3>
+						<h3>Ask a question</h3>
+					</div>
+					<form action="ask.php" method="POST"  class="form-inline"><div class="form-group">
+						<input type="text" name="question" class="form-control" size="100" placeholder="Asking as <?php if(isset($_COOKIE["user"])){ echo $_COOKIE["user"];}else{ echo "guest";} ?>">
+						</div><div class="form-group">
+						<label for="exampleInputEmail1">&nbsp;&nbsp; Subject : &nbsp;</label>
+						<select name="sub">
+							<option value="1">DBMS</option>
+							<option value="2">MPCA</option>
+							<option value="3">DAA</option>
+							<option value="4">TOC</option>
+							<option value="5">LA</option>
+						</select>
+					  </div>
+						<input type="text" name="author" class="form-control hidden" size="60" value="<?php if(isset($_COOKIE["user"])){ echo $_COOKIE["user"];}else{ echo "guest";} ?>" hidden>
+						&nbsp;&nbsp;<button type="submit" class="btn btn-primary">Ask</button>
+					</form>
+					<br><br><br>
+					<div class="recommended-info">
+						<h3>Top questions</h3>
 					</div>
 					<?php
 						$host = '127.0.0.1';
-						$dbuser = 'online_class'; 
-						$dbpass = '11111111';
+						$dbuser = 'secret'; 
+						$dbpass = 'secret';
 						$dbname = 'online_class';
 						$conn = new mysqli($host, $dbuser, $dbpass, $dbname);
 						if (!$conn) {
 							echo '<script>alert("DATABASE NOT CONNECTED")</script>';
 						}
+						$query = "SELECT * from questions ORDER BY likes DESC LIMIT 3";
+						$result = $conn->query($query);
+						if ($result->num_rows > 0) {                      
+						  while($row = $result->fetch_assoc()) {
+							  echo "<h4><hr><span class=\"clike\" style=\"font-size:13px;\"><a href=\"queslike.php?id=".$row["question_id"]."\" target=\"_blank\">like</a></span> &nbsp;".$row["question"]." ".$row["likes"]." likes - <a href=\"user.php?user=".$row["author"]."\">".$row["author"]."</a></h4>";
+							  $query = "SELECT * from answers WHERE question_id = '".$row["question_id"]."' ORDER BY likes DESC LIMIT 1";
+							  $res = $conn->query($query);
+							  $res = $res->fetch_assoc();
+							  if(isset($_COOKIE["user"])){
+								   $auth = $_COOKIE["user"];
+								}else{
+									$auth = "guest";
+								}
+							  echo "<form action=\"answer.php\" method=\"POST\"  class=\"form-inline\"><div class=\"form-group\">
+							  <input type=\"text\" name=\"answer\" class=\"form-control\" size=\"100\" placeholder=\"Answering as ".$auth."\">
+							  </div>
+							  <input type=\"text\" name=\"author\" class=\"form-control hidden\" size=\"60\" value=\"".$auth."\" hidden>
+							  <input type=\"text\" name=\"question_id\" class=\"form-control hidden\" size=\"60\" value=\"".$row["question_id"]."\" hidden>
+							  &nbsp;&nbsp;<button type=\"submit\" class=\"btn btn-primary\">Answer</button>
+						  </form>";
+						  echo "<h5>&nbsp;&nbsp;&nbsp;<span class=\"clike\" style=\"font-size:10px;\"><a href=\"anslike.php?id=".$res["answer_id"]."\" target=\"_blank\">like</a></span> &nbsp;".$res["answer"]." ".$res["likes"]." likes - <a href=\"user.php?user=".$res["author"]."\">".$res["author"]."</a></h5>";
+						  }
+					  }
+					  
+					?>
+				</div>
+
+				<hr>
+				<br>
+				<div class="top-grids">
+					<div class="recommended-info">
+						<h3>Recent Videos</h3>
+					</div>
+					<?php
 						$query = "SELECT * from post ORDER BY created_at DESC LIMIT 3";
 						$result = $conn->query($query);
 						if ($result->num_rows > 0) {

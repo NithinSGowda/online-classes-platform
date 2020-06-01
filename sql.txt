@@ -31,3 +31,166 @@ CREATE TABLE comments (
   FOREIGN KEY (post_id) REFERENCES posts(post_id)
 );
 
+
+
+--------------------------------
+Trigger
+
+DELIMITER $$
+CREATE PROCEDURE send_mail(author VARCHAR(10), title VARCHAR(10))
+BEGIN DECLARE cmd CHAR(255); 
+    DECLARE result CHAR(255); 
+    SET cmd = CONCAT('curl https://nith.ml/sendmail.php?author=',author,'&title=',title); 
+    SET result = sys_eval(cmd);
+END$$
+
+
+CREATE TRIGGER publish_trigger 
+AFTER INSERT ON post 
+FOR EACH ROW CALL send_mail(NEW.author, NEW.title);
+--------------------------------
+
+
+
+--------------------------------
+Average views and likes 
+
+SELECT
+	AVG( P.views ), AVG( P.likes )
+FROM
+	post AS P
+WHERE
+	P.sub = 'MPCA'
+--------------------------------
+
+
+
+
+--------------------------------
+To count and display total number of comments on a post
+
+SELECT
+	COUNT( C.comment_id )
+AS 
+	Comments
+FROM
+	comments AS C, post AS P
+WHERE
+	P.post_id = 18
+--------------------------------
+
+
+
+
+--------------------------------
+To select highest discussed( commented ) video lists of a particular subject :
+
+SELECT
+  P.post_id,
+  P.author,
+  P.description
+FROM
+  post AS P
+WHERE
+  P.post_id IN (
+    SELECT
+      C.post_id
+    FROM
+      comments AS C
+  )
+  AND 
+  P.sub = 'TOC'
+  ORDER BY
+      P.views DESC
+    LIMIT
+      10
+--------------------------------
+
+
+
+
+
+
+
+
+
+--------------------------------
+To search a video applying a search filter that the video belongs to a particular subject and uploaded by a particular faculty which is ordered by decreasing number of views :
+
+SELECT
+P.post_id,
+  P.author,
+  P.description
+FROM
+  post AS P
+WHERE
+  ( P.title LIKE '%automata%'
+  OR
+  P.description LIKE '%automata%' )
+  AND
+  sub LIKE 'TOC'
+  AND
+  author LIKE 'Nithin'
+ORDER BY
+	P.views DESC
+LIMIT
+	10
+--------------------------------
+
+
+
+DELIMITER $$
+
+CREATE TRIGGER Before_Insert_Content
+BEFORE INSERT ON post
+FOR EACH ROW
+BEGIN
+  IF (EXISTS(SELECT link FROM post WHERE link = NEW.link)) THEN
+    SIGNAL SQLSTATE VALUE '45000' SET MESSAGE_TEXT = 'Content already exists';
+  END IF;
+END$$
+DELIMITER ;
+
+SHOW TRIGGERS
+
+
+
+
+SELECT u.id, u.username, p.title, c.comment
+FROM ( users as u
+RIGHT JOIN comments as c ON c.author = u.username);
+
+
+SELECT c.*, p.title
+FROM comments as c, post as p
+WHERE c.post_id = p.post_id
+
+
+
+
+
+
+
+
+Reputation triggers :
+
+
+//On content upload 
+
+CREATE TRIGGER After_Insert_Content
+AFTER INSERT ON post
+FOR EACH ROW UPDATE users SET reputation = reputation + 2
+WHERE username = NEW.author
+
+
+//on question and answer
+
+CREATE TRIGGER After_Question
+AFTER INSERT ON questions
+FOR EACH ROW UPDATE users SET reputation = reputation + 1
+WHERE username = NEW.author;
+
+CREATE TRIGGER After_Answer
+AFTER INSERT ON answers
+FOR EACH ROW UPDATE users SET reputation = reputation + 1
+WHERE username = NEW.author;

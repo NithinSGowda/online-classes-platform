@@ -10,7 +10,7 @@
 	if (!$conn) {
 		echo '<script>alert("DATABASE NOT CONNECTED")</script>';
 	}
-	$query = "UPDATE post SET likes = likes + 1 WHERE post_id =".$_GET["id"];
+	$query = "UPDATE questions SET likes = likes + 1 WHERE question_id =".$_GET["id"];
 	$result = $conn->query($query);
 	echo "<script>window.close();</script>";
 ?>

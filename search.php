@@ -91,12 +91,12 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<div class="main-grids">
 				<div class="top-grids">
 					<div class="recommended-info">
-						<h3>Recent Videos</h3>
+						<h3>Search results</h3>
 					</div>
 					<?php
 						$host = '127.0.0.1';
-						$dbuser = 'online_class'; 
-						$dbpass = '11111111';
+						$dbuser = 'secret'; 
+						$dbpass = 'secret';
 						$dbname = 'online_class';
 						$conn = new mysqli($host, $dbuser, $dbpass, $dbname);
 						if (!$conn) {

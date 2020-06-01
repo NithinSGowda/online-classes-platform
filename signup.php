@@ -4,8 +4,8 @@ ini_set('display_errors', 1);
 error_reporting(-1);
 
 $host = '127.0.0.1';
-$dbuser = 'online_class'; 
-$dbpass = '11111111';
+$dbuser = 'secret'; 
+$dbpass = 'secret';
 $dbname = 'online_class';
 $siteurl = 'https://dbms.tempcloud.ml'; 
 $conn = new mysqli($host, $dbuser, $dbpass, $dbname);

@@ -13,10 +13,10 @@ if (!$conn) {
     echo '<script>alert("DATABASE NOT CONNECTED")</script>';
 }
 $author = $_POST["author"];
-$comment = $_POST["comment"];
-$id = $_POST["id"];
+$question = $_POST["question"];
+$sub = $_POST["sub"];
 
-$sql = "INSERT INTO comments (comment, author, post_id) VALUES ('".$comment."', '".$author."','".$id."')";
+$sql = "INSERT INTO questions (question, author, subject_id) VALUES ('".$question."', '".$author."','".$sub."')";
 if ($conn->query($sql) === TRUE) {
 echo "New record created successfully";
 } else {

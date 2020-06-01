@@ -12,17 +12,17 @@ $conn = new mysqli($host, $dbuser, $dbpass, $dbname);
 if (!$conn) {
     echo '<script>alert("DATABASE NOT CONNECTED")</script>';
 }
-$author = $_POST["author"];
-$comment = $_POST["comment"];
-$id = $_POST["id"];
+$follower = $_GET["follower"];
+$following = $_GET["following"];
 
-$sql = "INSERT INTO comments (comment, author, post_id) VALUES ('".$comment."', '".$author."','".$id."')";
+
+$sql = "INSERT INTO follow (followed_username, follower_username) VALUES ('".$following."', '".$follower."')";
 if ($conn->query($sql) === TRUE) {
 echo "New record created successfully";
 } else {
 echo "Error: " . $sql . "<br>" . $conn->error;
 }
 $conn->close();
-echo "<script>location.replace(\"javascript:history.go(-1)\")</script>";
+echo "<script>alert(\"You are following ".$following."\");location.replace(\"javascript:history.go(-1)\")</script>";
 
 ?>
